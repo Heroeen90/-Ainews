@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#00d4ff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="نيورون AI">
+<meta name="description" content="منصة أخبار الذكاء الاصطناعي العربية الأولى">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>نيورون | منصة أخبار الذكاء الاصطناعي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050810;--surface:#0d1117;--surface2:#161b27;--border:#1e2740;--accent:#00d4ff;--accent2:#7b2fff;--accent3:#ff6b35;--text:#e8edf5;--text-muted:#6b7a9a;--green:#00ff9d;--red:#ff3860;--gold:#ffd700;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;padding-top:var(--safe-top)}
+
+/* BG */
+.bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+.bg-orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;animation:orbFloat 8s ease-in-out infinite}
+.bg-orb-1{width:400px;height:400px;background:rgba(0,212,255,.06);top:-150px;right:-80px}
+.bg-orb-2{width:350px;height:350px;background:rgba(123,47,255,.06);bottom:0;left:-100px;animation-delay:-4s}
+@keyframes orbFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-25px)}}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:100;background:rgba(5,8,16,.93);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;gap:12px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer}
+.logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;animation:iconPulse 2s ease-in-out infinite;flex-shrink:0}
+@keyframes iconPulse{0%,100%{box-shadow:0 0 0 0 rgba(0,212,255,.35)}50%{box-shadow:0 0 0 8px rgba(0,212,255,0)}}
+.logo-text{font-size:20px;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.logo-sub{font-size:9px;color:var(--text-muted);font-family:'IBM Plex Mono',monospace;line-height:1}
+.live-badge{display:flex;align-items:center;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--green);background:rgba(0,255,157,.08);border:1px solid rgba(0,255,157,.2);padding:5px 10px;border-radius:20px;white-space:nowrap}
+.live-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:livePulse 1.5s ease-in-out infinite}
+@keyframes livePulse{0%,100%{opacity:1}50%{opacity:.3}}
+.notif-btn{background:var(--surface2);border:1px solid var(--border);border-radius:10px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all .2s;flex-shrink:0;position:relative}
+.notif-btn:hover{border-color:var(--accent);background:rgba(0,212,255,.1)}
+.notif-badge{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-size:9px;font-family:'IBM Plex Mono',monospace;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg)}
+
+/* TICKER */
+.ticker{background:var(--surface);border-bottom:1px solid var(--border);padding:7px 0;overflow:hidden}
+.ticker-inner{display:flex;align-items:center}
+.ticker-label{background:var(--accent);color:var(--bg);padding:2px 10px;font-size:10px;font-weight:700;white-space:nowrap;border-radius:3px;margin-left:12px;flex-shrink:0}
+.ticker-track{overflow:hidden;flex:1}
+.ticker-content{display:flex;gap:40px;animation:tickerScroll 50s linear infinite;white-space:nowrap}
+@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-item{font-size:12px;color:var(--text-muted);flex-shrink:0}
+.ticker-item span{color:var(--accent);margin-left:6px}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(5,8,16,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;z-index:100;padding-bottom:var(--safe-bottom)}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px;cursor:pointer;transition:all .2s;border:none;background:transparent;color:var(--text-muted);font-family:'Cairo',sans-serif;font-size:10px}
+.bnav-item.active{color:var(--accent)}
+.bnav-item .bnav-icon{font-size:20px;transition:transform .2s}
+.bnav-item.active .bnav-icon{transform:scale(1.15)}
+
+/* CONTENT */
+main{position:relative;z-index:1;padding:16px 16px 90px}
+
+/* SECTION */
+.section{display:none}
+.section.active{display:block}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.section-title{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700}
+.section-line{width:3px;height:20px;background:linear-gradient(to bottom,var(--accent),var(--accent2));border-radius:2px}
+.see-all-btn{font-size:12px;color:var(--accent);border:1px solid var(--border);padding:5px 12px;border-radius:20px;cursor:pointer;background:none;font-family:'Cairo',sans-serif;transition:all .2s}
+.see-all-btn:hover{background:var(--accent);color:var(--bg)}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all .25s;cursor:pointer;margin-bottom:12px;active:scale(.98)}
+.card:active{transform:scale(.98);border-color:rgba(0,212,255,.4)}
+.hero-card{position:relative;min-height:280px;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(135deg,#0d1117,#1a2040)}
+.hero-bg-emoji{position:absolute;top:50%;left:50%;transform:translate(-50%,-65%);font-size:90px;opacity:.07;filter:blur(1px);pointer-events:none}
+.hero-content{padding:20px;position:relative}
+.hero-card h2{font-size:18px;font-weight:700;line-height:1.5;margin-bottom:8px}
+.hero-card p{font-size:13px;color:var(--text-muted);line-height:1.7;margin-bottom:10px}
+
+.small-card{padding:16px;display:flex;gap:12px;align-items:flex-start}
+.small-card-body{flex:1}
+.small-card h3{font-size:14px;font-weight:600;line-height:1.5;margin-bottom:6px}
+.small-card p{font-size:12px;color:var(--text-muted);line-height:1.6}
+.small-card-icon{font-size:28px;flex-shrink:0}
+
+/* TAG */
+.tag{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:600;margin-bottom:8px;font-family:'IBM Plex Mono',monospace;white-space:nowrap}
+.tag-blue{background:rgba(0,212,255,.12);color:var(--accent);border:1px solid rgba(0,212,255,.25)}
+.tag-purple{background:rgba(123,47,255,.12);color:#a78bfa;border:1px solid rgba(123,47,255,.25)}
+.tag-orange{background:rgba(255,107,53,.12);color:var(--accent3);border:1px solid rgba(255,107,53,.25)}
+.tag-green{background:rgba(0,255,157,.1);color:var(--green);border:1px solid rgba(0,255,157,.25)}
+.tag-gold{background:rgba(255,215,0,.1);color:var(--gold);border:1px solid rgba(255,215,0,.25)}
+
+/* META */
+.card-meta{display:flex;align-items:center;gap:10px;font-size:11px;color:var(--text-muted)}
+.meta-source{display:flex;align-items:center;gap:4px}
+.src-dot{width:5px;height:5px;border-radius:50%}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.stat-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;align-items:center;justify-content:space-between}
+.stat-val{font-size:20px;font-weight:700;font-family:'IBM Plex Mono',monospace}
+.stat-lbl{font-size:11px;color:var(--text-muted);margin-bottom:3px}
+.stat-chg{font-size:10px;font-family:'IBM Plex Mono',monospace}
+.up{color:var(--green)}.down{color:var(--red)}
+.stat-ico{font-size:24px;opacity:.6}
+
+/* MINI CHART */
+.mini-chart{display:flex;align-items:flex-end;gap:2px;height:40px;margin-top:6px}
+.bar{flex:1;border-radius:2px 2px 0 0;background:linear-gradient(to top,var(--accent2),var(--accent));opacity:.7;animation:barUp .6s ease-out backwards}
+@keyframes barUp{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+
+/* ANALYSIS */
+.analysis-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:12px}
+.analysis-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--accent2);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px}
+.analysis-label::before{content:'// '}
+.analysis-card h2{font-size:17px;font-weight:700;line-height:1.5;margin-bottom:10px}
+.analysis-card p{font-size:13px;color:var(--text-muted);line-height:1.8;margin-bottom:10px}
+.insight-box{background:var(--surface2);border-radius:10px;padding:14px;margin-top:12px}
+.insight-item{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;color:var(--text-muted);line-height:1.6}
+.insight-item:last-child{border-bottom:none;padding-bottom:0}
+.ii-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+/* SOURCES */
+.sources-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.source-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;transition:all .25s;cursor:pointer;text-decoration:none;display:block}
+.source-card:active{transform:scale(.96);border-color:var(--accent)}
+.source-logo{font-size:26px;margin-bottom:6px}
+.source-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px}
+.source-type{font-size:10px;color:var(--text-muted)}
+.source-status{font-size:9px;color:var(--green);margin-top:5px;font-family:'IBM Plex Mono',monospace}
+
+/* ARCHIVE */
+.arch-header{padding:14px 16px;border-bottom:1px solid var(--border)}
+.search-box{display:flex;gap:8px;margin-bottom:12px}
+.search-input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:9px 14px;color:var(--text);font-family:'Cairo',sans-serif;font-size:13px;transition:all .2s;-webkit-appearance:none}
+.search-input:focus{outline:none;border-color:var(--accent)}
+.search-input::placeholder{color:var(--text-muted)}
+.search-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:10px;padding:9px 14px;color:var(--bg);font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-family:'Cairo',sans-serif;font-size:11px;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .2s}
+.chip.active,.chip:active{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+
+.arch-item{display:flex;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .2s;align-items:flex-start}
+.arch-item:active{background:var(--surface2)}
+.arch-date{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-muted);white-space:nowrap;padding-top:2px;min-width:64px}
+.arch-body{flex:1}
+.arch-title{font-size:13px;font-weight:500;line-height:1.5;margin-bottom:4px}
+.arch-source{font-size:10px;color:var(--text-muted)}
+.arch-arrow{color:var(--text-muted);font-size:14px;flex-shrink:0;padding-top:2px}
+
+/* PAGINATION */
+.pagination{display:flex;justify-content:center;gap:6px;padding:16px}
+.pg-btn{width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;font-family:'Cairo',sans-serif;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.pg-btn.active,.pg-btn:active{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+
+/* MODAL / ARTICLE VIEW */
+.article-overlay{position:fixed;inset:0;z-index:200;background:var(--bg);transform:translateY(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);overflow-y:auto;padding-bottom:30px}
+.article-overlay.open{transform:translateY(0)}
+.article-header{position:sticky;top:0;background:rgba(5,8,16,.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);z-index:10}
+.back-btn{background:var(--surface2);border:1px solid var(--border);border-radius:10px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;flex-shrink:0;transition:all .2s}
+.back-btn:active{background:var(--accent);color:var(--bg)}
+.article-header-title{font-size:14px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.share-btn{background:var(--surface2);border:1px solid var(--border);border-radius:10px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0}
+.article-body{padding:20px 16px}
+.article-tag{margin-bottom:12px}
+.article-title{font-size:22px;font-weight:700;line-height:1.5;margin-bottom:14px}
+.article-meta{display:flex;flex-wrap:wrap;gap:10px;font-size:11px;color:var(--text-muted);margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border)}
+.article-meta span{display:flex;align-items:center;gap:4px}
+.article-text p{font-size:14px;color:var(--text-muted);line-height:1.9;margin-bottom:14px}
+.article-text p:first-child{color:var(--text);font-size:15px;font-weight:500}
+.article-box{background:var(--surface2);border-radius:12px;padding:16px;margin:16px 0}
+.article-box-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--accent);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px}
+.article-box ul{list-style:none;padding:0}
+.article-box li{font-size:13px;color:var(--text-muted);line-height:1.8;padding:4px 0;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:8px}
+.article-box li:last-child{border-bottom:none}
+.article-box li::before{content:'←';color:var(--accent);flex-shrink:0;margin-top:2px}
+.article-quote{border-right:3px solid var(--accent);padding-right:14px;margin:16px 0}
+.article-quote p{font-size:14px;color:var(--text);font-style:normal;line-height:1.8}
+.article-quote cite{font-size:11px;color:var(--text-muted);font-style:normal}
+.related-title{font-size:14px;font-weight:700;margin:20px 0 12px;display:flex;align-items:center;gap:8px}
+.related-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;cursor:pointer;transition:all .2s}
+.related-card:active{border-color:var(--accent)}
+.related-card h4{font-size:13px;font-weight:600;line-height:1.5;margin-bottom:4px}
+.related-card p{font-size:11px;color:var(--text-muted)}
+
+/* AI LOADER */
+.ai-loading{display:flex;align-items:center;gap:8px;color:var(--accent);font-size:12px;font-family:'IBM Plex Mono',monospace;padding:20px 0}
+.ai-dots span{display:inline-block;width:5px;height:5px;background:var(--accent);border-radius:50%;animation:dotB 1.2s ease-in-out infinite}
+.ai-dots span:nth-child(2){animation-delay:.2s}
+.ai-dots span:nth-child(3){animation-delay:.4s}
+@keyframes dotB{0%,80%,100%{transform:scale(.6)}40%{transform:scale(1)}}
+
+/* INSTALL BANNER */
+.install-banner{background:linear-gradient(135deg,rgba(0,212,255,.12),rgba(123,47,255,.12));border:1px solid rgba(0,212,255,.25);border-radius:14px;padding:16px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.install-banner-icon{font-size:30px;flex-shrink:0}
+.install-banner h3{font-size:14px;font-weight:700;margin-bottom:4px}
+.install-banner p{font-size:11px;color:var(--text-muted);line-height:1.5}
+.install-btn{background:var(--accent);color:var(--bg);border:none;border-radius:10px;padding:8px 14px;font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;margin-top:4px}
+
+/* NOTIF PANEL */
+.notif-panel{position:fixed;top:0;right:0;bottom:0;width:min(320px,100vw);background:var(--surface);border-left:1px solid var(--border);z-index:300;transform:translateX(100%);transition:transform .3s;overflow-y:auto;padding-bottom:var(--safe-bottom)}
+.notif-panel.open{transform:translateX(0)}
+.notif-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:299;opacity:0;pointer-events:none;transition:opacity .3s}
+.notif-overlay.open{opacity:1;pointer-events:all}
+.notif-header{padding:16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surface)}
+.close-notif{background:var(--surface2);border:1px solid var(--border);border-radius:8px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px}
+.notif-item{padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .2s;display:flex;gap:10px;align-items:flex-start}
+.notif-item:active{background:var(--surface2)}
+.notif-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:5px}
+.notif-dot.read{background:var(--border)}
+.notif-item-body h4{font-size:13px;font-weight:600;line-height:1.4;margin-bottom:3px}
+.notif-item-body p{font-size:11px;color:var(--text-muted)}
+.notif-time{font-size:10px;color:var(--text-muted);font-family:'IBM Plex Mono',monospace;white-space:nowrap}
+.enable-notif-box{padding:20px 16px;text-align:center}
+.enable-notif-box h3{font-size:16px;font-weight:700;margin-bottom:8px}
+.enable-notif-box p{font-size:12px;color:var(--text-muted);margin-bottom:16px;line-height:1.7}
+.enable-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--bg);border:none;border-radius:12px;padding:12px 24px;font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;width:100%}
+
+/* TOAST */
+.toast-wrap{position:fixed;bottom:90px;left:16px;right:16px;z-index:400;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:10px;font-size:13px;animation:toastIn .3s ease-out;box-shadow:0 8px 32px rgba(0,0,0,.4);pointer-events:all}
+@keyframes toastIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+.toast.out{animation:toastOut .3s ease-out forwards}
+@keyframes toastOut{to{opacity:0;transform:translateY(10px)}}
+.toast-icon{font-size:18px;flex-shrink:0}
+.toast-title{font-weight:600;margin-bottom:1px}
+.toast-msg{font-size:11px;color:var(--text-muted)}
+
+/* OFFLINE */
+.offline-bar{background:var(--red);color:#fff;text-align:center;padding:6px;font-size:12px;font-weight:600;display:none}
+.offline-bar.show{display:block}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+
+<!-- Offline Bar -->
+<div class="offline-bar" id="offlineBar">📡 أنت غير متصل — يعمل في وضع التخزين المؤقت</div>
+
+<!-- Header -->
+<header>
+  <div class="header-inner">
+    <div class="logo" onclick="showSection('feed')">
+      <div class="logo-icon">🧠</div>
+      <div>
+        <div class="logo-text">نيورون</div>
+        <div class="logo-sub">AI NEWS PLATFORM</div>
+      </div>
+    </div>
+    <div class="live-badge"><div class="live-dot"></div>مباشر</div>
+    <button class="notif-btn" onclick="openNotifPanel()" id="notifBtn">
+      🔔
+      <div class="notif-badge" id="notifBadge">3</div>
+    </button>
+  </div>
+</header>
+
+<!-- Ticker -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <div class="ticker-label">عاجل</div>
+    <div class="ticker-track">
+      <div class="ticker-content">
+        <span class="ticker-item"><span>OpenAI</span> GPT-5 يحقق 92% في اختبار Bar للمحامين</span>
+        <span class="ticker-item"><span>DeepMind</span> AlphaFold 3 يشمل جميع جزيئات الحياة</span>
+        <span class="ticker-item"><span>السعودية</span> تضخ 40 مليار دولار في صندوق AI مع SoftBank</span>
+        <span class="ticker-item"><span>Nvidia</span> Blackwell Ultra يُعلن عن أداء غير مسبوق</span>
+        <span class="ticker-item"><span>Meta</span> Llama 4 يتفوق على GPT-4 في 18 معياراً</span>
+        <span class="ticker-item"><span>EU AI Act</span> يدخل التطبيق الكامل في يناير 2026</span>
+        <span class="ticker-item"><span>OpenAI</span> GPT-5 يحقق 92% في اختبار Bar للمحامين</span>
+        <span class="ticker-item"><span>DeepMind</span> AlphaFold 3 يشمل جميع جزيئات الحياة</span>
+        <span class="ticker-item"><span>السعودية</span> تضخ 40 مليار دولار في صندوق AI مع SoftBank</span>
+        <span class="ticker-item"><span>Nvidia</span> Blackwell Ultra يُعلن عن أداء غير مسبوق</span>
+        <span class="ticker-item"><span>Meta</span> Llama 4 يتفوق على GPT-4 في 18 معياراً</span>
+        <span class="ticker-item"><span>EU AI Act</span> يدخل التطبيق الكامل في يناير 2026</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <!-- ===== SECTION: FEED ===== -->
+  <div class="section active" id="sec-feed">
+
+    <!-- Install Banner -->
+    <div class="install-banner" id="installBanner" style="display:none">
+      <div class="install-banner-icon">📲</div>
+      <div style="flex:1">
+        <h3>ثبّت تطبيق نيورون</h3>
+        <p>أضفه للشاشة الرئيسية للحصول على إشعارات الأخبار</p>
+        <button class="install-btn" onclick="installPWA()">تثبيت الآن</button>
+      </div>
+      <button onclick="document.getElementById('installBanner').style.display='none'" style="background:none;border:none;color:var(--text-muted);font-size:18px;cursor:pointer;flex-shrink:0">✕</button>
+    </div>
+
+    <!-- Hero -->
+    <div class="section-header">
+      <div class="section-title"><div class="section-line"></div>الأخبار الرئيسية</div>
+    </div>
+
+    <div class="card hero-card" onclick="openArticle('gpt5')">
+      <div class="hero-bg-emoji">🤖</div>
+      <div class="hero-content">
+        <div class="tag tag-blue">🔬 بحث وتطوير</div>
+        <h2>GPT-5 يتجاوز حاجز الاستدلال ويحقق 92% في اختبار Bar للمحامين</h2>
+        <p>قفزة نوعية غير مسبوقة تُعيد تعريف إمكانيات الذكاء الاصطناعي في المهن المعرفية...</p>
+        <div class="card-meta">
+          <div class="meta-source"><div class="src-dot" style="background:var(--accent)"></div>MIT Technology Review</div>
+          <span>· منذ ساعتين</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card small-card" onclick="openArticle('alphafold3')">
+      <div class="small-card-icon">🧬</div>
+      <div class="small-card-body">
+        <div class="tag tag-purple">أبحاث</div>
+        <h3>DeepMind يكشف AlphaFold 3: تنبؤ بنية جميع جزيئات الحياة</h3>
+        <p>النموذج يتجاوز البروتينات ليشمل DNA وRNA والجزيئات الصغيرة بدقة 40% أعلى.</p>
+        <div class="card-meta" style="margin-top:6px"><span>Nature · منذ 4 ساعات</span></div>
+      </div>
+    </div>
+
+    <div class="card small-card" onclick="openArticle('saudi40b')">
+      <div class="small-card-icon">💰</div>
+      <div class="small-card-body">
+        <div class="tag tag-orange">استثمار</div>
+        <h3>السعودية تضخ 40 مليار دولار في صندوق AI مع SoftBank</h3>
+        <p>أكبر صندوق متخصص في تاريخ الذكاء الاصطناعي يُطلق من الرياض.</p>
+        <div class="card-meta" style="margin-top:6px"><span>FT · منذ 6 ساعات</span></div>
+      </div>
+    </div>
+
+    <!-- Today's News -->
+    <div class="section-header" style="margin-top:8px">
+      <div class="section-title"><div class="section-line"></div>أخبار اليوم</div>
+      <button class="see-all-btn" onclick="showSection('archive')">الأرشيف</button>
+    </div>
+
+    <div class="card small-card" onclick="openArticle('mistral')">
+      <div class="small-card-icon">🌍</div>
+      <div class="small-card-body">
+        <div class="tag tag-blue">نماذج</div>
+        <h3>Mistral تطلق Le Chat Pro: منافس أوروبي يدعم 32 لغة</h3>
+        <p>الشركة الفرنسية تركّز على الخصوصية والامتثال لـ GDPR.</p>
+        <div class="card-meta" style="margin-top:6px"><span>The Verge · منذ ساعة</span></div>
+      </div>
+    </div>
+
+    <div class="card small-card" onclick="openArticle('china_policy')">
+      <div class="small-card-icon">⚖️</div>
+      <div class="small-card-body">
+        <div class="tag tag-green">سياسات</div>
+        <h3>الصين تُطلق معياراً وطنياً موحداً لأمان نماذج الذكاء الاصطناعي</h3>
+        <p>إطار تنظيمي شامل مع تدقيق ثلاثي المراحل يُلزم جميع الشركات.</p>
+        <div class="card-meta" style="margin-top:6px"><span>Reuters · منذ 3 ساعات</span></div>
+      </div>
+    </div>
+
+    <div class="card small-card" onclick="openArticle('hollywood_ai')">
+      <div class="small-card-icon">🎬</div>
+      <div class="small-card-body">
+        <div class="tag tag-purple">إبداع</div>
+        <h3>Sora وRunway: 60% من مؤثرات هوليوود باتت توليدية</h3>
+        <p>استطلاع 2025 يكشف تحولاً جذرياً في سير العمل الإبداعي.</p>
+        <div class="card-meta" style="margin-top:6px"><span>Wired · منذ 5 ساعات</span></div>
+      </div>
+    </div>
+
+    <div class="card small-card" onclick="openArticle('fda_ai')">
+      <div class="small-card-icon">🏥</div>
+      <div class="small-card-body">
+        <div class="tag tag-orange">تطبيقات</div>
+        <h3>FDA يوافق على أول نظام تشخيصي AI دون مراجعة بشرية</h3>
+        <p>يكشف سرطان الثدي المبكر بدقة 98% مع معدل كاذب منخفض.</p>
+        <div class="card-meta" style="margin-top:6px"><span>STAT News · منذ 7 ساعات</span></div>
+      </div>
+    </div>
+
+    <div class="card small-card" onclick="openArticle('copilot_enterprise')">
+      <div class="small-card-icon">💻</div>
+      <div class="small-card-body">
+        <div class="tag tag-blue">أدوات</div>
+        <h3>GitHub Copilot Enterprise يفهم قاعدة الكود بالكامل في سياق واحد</h3>
+        <p>تحديث ثوري يُتيح للنموذج فهم المشروع كاملاً لا ملف بملف.</p>
+        <div class="card-meta" style="margin-top:6px"><span>GitHub Blog · منذ 9 ساعات</span></div>
+      </div>
+    </div>
+
+    <div class="card small-card" onclick="openArticle('jobs_report')">
+      <div class="small-card-icon">📊</div>
+      <div class="small-card-body">
+        <div class="tag tag-green">مجتمع</div>
+        <h3>تقرير McKinsey: AI يُنشئ 78M وظيفة أسرع مما يُلغيه</h3>
+        <p>مقابل 45 مليون وظيفة متأثرة، تنشأ 78 مليون فرصة جديدة مرتبطة بـ AI.</p>
+        <div class="card-meta" style="margin-top:6px"><span>McKinsey · منذ 11 ساعة</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SECTION: ANALYSIS ===== -->
+  <div class="section" id="sec-analysis">
+    <div class="section-header">
+      <div class="section-title"><div class="section-line"></div>تحليلات عمق</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-box">
+        <div><div class="stat-lbl">نماذج صدرت 2025</div><div class="stat-val" style="color:var(--accent)">2,847</div><div class="stat-chg up">↑ 340%</div></div>
+        <div class="stat-ico">🚀</div>
+      </div>
+      <div class="stat-box">
+        <div><div class="stat-lbl">استثمار عالمي</div><div class="stat-val" style="color:var(--gold)">$890B</div><div class="stat-chg up">↑ 65%</div></div>
+        <div class="stat-ico">💰</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-box">
+        <div><div class="stat-lbl">تبني المؤسسات</div><div class="stat-val" style="color:var(--green)">73%</div><div class="stat-chg up">↑ 28 نقطة</div></div>
+        <div class="stat-ico">🏢</div>
+      </div>
+      <div class="stat-box">
+        <div>
+          <div class="stat-lbl">نمو أخبار AI</div>
+          <div class="mini-chart">
+            <div class="bar" style="height:30%;animation-delay:.1s"></div>
+            <div class="bar" style="height:45%;animation-delay:.2s"></div>
+            <div class="bar" style="height:55%;animation-delay:.3s"></div>
+            <div class="bar" style="height:65%;animation-delay:.4s"></div>
+            <div class="bar" style="height:75%;animation-delay:.5s"></div>
+            <div class="bar" style="height:85%;animation-delay:.6s"></div>
+            <div class="bar" style="height:100%;animation-delay:.7s;opacity:1"></div>
+          </div>
+        </div>
+        <div class="stat-ico">📈</div>
+      </div>
+    </div>
+
+    <div class="analysis-card" onclick="openArticle('analysis_race')">
+      <div class="analysis-label">تحليل أسبوعي</div>
+      <h2>سباق النماذج الكبيرة: كيف تُعيد العمالقة رسم حدود الذكاء الاصطناعي؟</h2>
+      <p>بعد أربع سنوات من ChatGPT، يمتد سباق النماذج ليشمل عشرات الشركات على مستويات متعددة...</p>
+      <div class="insight-box">
+        <div class="insight-item"><div class="ii-icon">📊</div><span>سوق AI التوليدي: 1.3 تريليون دولار بحلول 2032</span></div>
+        <div class="insight-item"><div class="ii-icon">🔄</div><span>دورة الإصدار: من 12 شهراً إلى أقل من 3 أشهر</span></div>
+        <div class="insight-item"><div class="ii-icon">⚡</div><span>التركيز ينتقل من الحجم إلى الكفاءة والتخصص</span></div>
+        <div class="insight-item"><div class="ii-icon">🌐</div><span>المصدر المفتوح يُقلص الفجوة مع النماذج التجارية</span></div>
+      </div>
+    </div>
+
+    <div class="analysis-card" onclick="openArticle('analysis_safety')">
+      <div class="analysis-label">تحليل تقني</div>
+      <h2>أمان الذكاء الاصطناعي: من الأبحاث إلى التنظيم الإلزامي</h2>
+      <p>انتقلت قضية سلامة AI من النقاشات الأكاديمية إلى المجلس التشريعي في وقت قياسي...</p>
+      <div class="insight-box">
+        <div class="insight-item"><div class="ii-icon">🛡️</div><span>EU AI Act: أول تشريع ملزم عالمياً لنماذج الذكاء الاصطناعي</span></div>
+        <div class="insight-item"><div class="ii-icon">🔍</div><span>تقنيات interpretability تكشف آليات عمل النماذج للمرة الأولى</span></div>
+        <div class="insight-item"><div class="ii-icon">⚠️</div><span>RLHF يُحسّن السلامة لكن يُقلل الإبداع وفق أحدث الأبحاث</span></div>
+      </div>
+    </div>
+
+    <div class="analysis-card" onclick="openArticle('analysis_hardware')">
+      <div class="analysis-label">تحليل صناعي</div>
+      <h2>حرب الرقائق: Nvidia وتحديات المنافسة في عصر الذكاء الاصطناعي</h2>
+      <p>Nvidia تهيمن بـ 88% من سوق معالجات AI، لكن المنافسين يتجمعون...</p>
+      <div class="insight-box">
+        <div class="insight-item"><div class="ii-icon">🖥️</div><span>12.4 مليون معالج AI يُنتج سنوياً في 2025</span></div>
+        <div class="insight-item"><div class="ii-icon">🏭</div><span>AMD وIntel يُسرّعان الاستثمار في معالجات مخصصة</span></div>
+        <div class="insight-item"><div class="ii-icon">🌏</div><span>الصين تُسرّع تطوير بدائل محلية في ظل قيود التصدير</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SECTION: SOURCES ===== -->
+  <div class="section" id="sec-sources">
+    <div class="section-header">
+      <div class="section-title"><div class="section-line"></div>المصادر المرتبطة</div>
+    </div>
+    <div class="sources-grid">
+      <a class="source-card" href="https://www.technologyreview.com" target="_blank">
+        <div class="source-logo">🔬</div>
+        <div class="source-name">MIT Tech Review</div>
+        <div class="source-type">بحث وتقنية</div>
+        <div class="source-status">● متصل</div>
+      </a>
+      <a class="source-card" href="https://www.nature.com/subjects/artificial-intelligence" target="_blank">
+        <div class="source-logo">🧬</div>
+        <div class="source-name">Nature AI</div>
+        <div class="source-type">مجلة علمية محكّمة</div>
+        <div class="source-status">● متصل</div>
+      </a>
+      <a class="source-card" href="https://www.wired.com/tag/artificial-intelligence/" target="_blank">
+        <div class="source-logo">⚡</div>
+        <div class="source-name">Wired</div>
+        <div class="source-type">صحافة تقنية</div>
+        <div class="source-status">● متصل</div>
+      </a>
+      <a class="source-card" href="https://arxiv.org/list/cs.AI/recent" target="_blank">
+        <div class="source-logo">📄</div>
+        <div class="source-name">arXiv AI</div>
+        <div class="source-type">أبحاث أكاديمية</div>
+        <div class="source-status">● متصل</div>
+      </a>
+      <a class="source-card" href="https://www.theverge.com/ai-artificial-intelligence" target="_blank">
+        <div class="source-logo">🌐</div>
+        <div class="source-name">The Verge</div>
+        <div class="source-type">أخبار التقنية</div>
+        <div class="source-status">● متصل</div>
+      </a>
+      <a class="source-card" href="https://venturebeat.com/ai/" target="_blank">
+        <div class="source-logo">🚀</div>
+        <div class="source-name">VentureBeat AI</div>
+        <div class="source-type">ريادة أعمال وAI</div>
+        <div class="source-status">● متصل</div>
+      </a>
+      <a class="source-card" href="https://ai.googleblog.com" target="_blank">
+        <div class="source-logo">🧠</div>
+        <div class="source-name">Google AI Blog</div>
+        <div class="source-type">أبحاث Google</div>
+        <div class="source-status">● متصل</div>
+      </a>
+      <a class="source-card" href="https://openai.com/blog" target="_blank">
+        <div class="source-logo">🤖</div>
+        <div class="source-name">OpenAI Blog</div>
+        <div class="source-type">أبحاث وإعلانات</div>
+        <div class="source-status">● متصل</div>
+      </a>
+      <a class="source-card" href="https://www.anthropic.com/news" target="_blank">
+        <div class="source-logo">🛡️</div>
+        <div class="source-name">Anthropic</div>
+        <div class="source-type">أبحاث السلامة</div>
+        <div class="source-status">● متصل</div>
+      </a>
+      <a class="source-card" href="https://techcrunch.com/category/artificial-intelligence/" target="_blank">
+        <div class="source-logo">💡</div>
+        <div class="source-name">TechCrunch AI</div>
+        <div class="source-type">أخبار الشركات</div>
+        <div class="source-status">● متصل</div>
+      </a>
+      <a class="source-card" href="https://huggingface.co/blog" target="_blank">
+        <div class="source-logo">🤗</div>
+        <div class="source-name">HuggingFace Blog</div>
+        <div class="source-type">مصدر مفتوح</div>
+        <div class="source-status">● متصل</div>
+      </a>
+      <a class="source-card" href="https://deepmind.google/discover/blog/" target="_blank">
+        <div class="source-logo">🎯</div>
+        <div class="source-name">DeepMind Blog</div>
+        <div class="source-type">أبحاث متقدمة</div>
+        <div class="source-status">● متصل</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ===== SECTION: ARCHIVE ===== -->
+  <div class="section" id="sec-archive">
+    <div class="arch-header">
+      <div class="search-box">
+        <input class="search-input" type="search" placeholder="ابحث في الأرشيف..." id="archSearch" oninput="filterArchive(this.value)">
+        <button class="search-btn" onclick="doSearch()">🔍 بحث</button>
+      </div>
+      <div class="chips" id="chips">
+        <button class="chip active" onclick="setChip(this,'all')">الكل</button>
+        <button class="chip" onclick="setChip(this,'نماذج')">نماذج</button>
+        <button class="chip" onclick="setChip(this,'أبحاث')">أبحاث</button>
+        <button class="chip" onclick="setChip(this,'استثمار')">استثمار</button>
+        <button class="chip" onclick="setChip(this,'سياسات')">سياسات</button>
+        <button class="chip" onclick="setChip(this,'تطبيقات')">تطبيقات</button>
+        <button class="chip" onclick="setChip(this,'أدوات')">أدوات</button>
+      </div>
+    </div>
+    <div id="archiveList"></div>
+    <div class="pagination" id="pagination"></div>
+  </div>
+
+</main>
+
+<!-- Bottom Nav -->
+<nav class="bottom-nav">
+  <button class="bnav-item active" id="bn-feed" onclick="showSection('feed')">
+    <span class="bnav-icon">📰</span>الأخبار
+  </button>
+  <button class="bnav-item" id="bn-analysis" onclick="showSection('analysis')">
+    <span class="bnav-icon">📊</span>تحليلات
+  </button>
+  <button class="bnav-item" id="bn-sources" onclick="showSection('sources')">
+    <span class="bnav-icon">🔗</span>المصادر
+  </button>
+  <button class="bnav-item" id="bn-archive" onclick="showSection('archive')">
+    <span class="bnav-icon">🗂️</span>الأرشيف
+  </button>
+</nav>
+
+<!-- ===== ARTICLE OVERLAY ===== -->
+<div class="article-overlay" id="articleOverlay">
+  <div class="article-header">
+    <button class="back-btn" onclick="closeArticle()">←</button>
+    <div class="article-header-title" id="articleHeaderTitle"></div>
+    <button class="share-btn" onclick="shareArticle()">↗️</button>
+  </div>
+  <div class="article-body" id="articleBody"></div>
+</div>
+
+<!-- ===== NOTIFICATIONS PANEL ===== -->
+<div class="notif-overlay" id="notifOverlay" onclick="closeNotifPanel()"></div>
+<div class="notif-panel" id="notifPanel">
+  <div class="notif-header">
+    <div style="font-weight:700;font-size:16px">الإشعارات</div>
+    <button class="close-notif" onclick="closeNotifPanel()">✕</button>
+  </div>
+
+  <div class="enable-notif-box" id="enableNotifBox" style="display:none">
+    <div style="font-size:40px;margin-bottom:12px">🔔</div>
+    <h3>فعّل إشعارات الأخبار</h3>
+    <p>احصل على إشعارات فورية على شاشة هاتفك عند نشر أخبار مهمة حتى وأنت خارج التطبيق</p>
+    <button class="enable-btn" onclick="requestNotifPermission()">تفعيل الإشعارات</button>
+  </div>
+
+  <div id="notifList">
+    <div class="notif-item" onclick="openArticleFromNotif('gpt5');closeNotifPanel()">
+      <div class="notif-dot"></div>
+      <div class="notif-item-body">
+        <h4>🤖 خبر عاجل: GPT-5 يحقق 92% في اختبار Bar</h4>
+        <p>OpenAI تُعلن رسمياً عن نموذجها الأقوى حتى الآن...</p>
+      </div>
+      <div class="notif-time">2س</div>
+    </div>
+    <div class="notif-item" onclick="openArticleFromNotif('alphafold3');closeNotifPanel()">
+      <div class="notif-dot"></div>
+      <div class="notif-item-body">
+        <h4>🧬 DeepMind: AlphaFold 3 يشمل جميع جزيئات الحياة</h4>
+        <p>نشر في مجلة Nature ووصف بأنه ثورة في الأحياء الجزيئية...</p>
+      </div>
+      <div class="notif-time">4س</div>
+    </div>
+    <div class="notif-item" onclick="openArticleFromNotif('saudi40b');closeNotifPanel()">
+      <div class="notif-dot"></div>
+      <div class="notif-item-body">
+        <h4>💰 السعودية وSoftBank: 40 مليار دولار لـ AI</h4>
+        <p>أكبر صندوق استثماري في تاريخ الذكاء الاصطناعي...</p>
+      </div>
+      <div class="notif-time">6س</div>
+    </div>
+    <div class="notif-item" onclick="openArticleFromNotif('fda_ai');closeNotifPanel()">
+      <div class="notif-dot read"></div>
+      <div class="notif-item-body">
+        <h4>🏥 FDA يوافق على أول نظام تشخيصي AI مستقل</h4>
+        <p>يشخّص سرطان الثدي بدقة 98% دون مراجعة بشرية...</p>
+      </div>
+      <div class="notif-time">7س</div>
+    </div>
+    <div class="notif-item" onclick="openArticleFromNotif('jobs_report');closeNotifPanel()">
+      <div class="notif-dot read"></div>
+      <div class="notif-item-body">
+        <h4>📊 McKinsey: AI يُنشئ وظائف أكثر مما يُلغي</h4>
+        <p>78 مليون وظيفة جديدة مقابل 45 مليون متأثرة في 2025...</p>
+      </div>
+      <div class="notif-time">11س</div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+// ============================================================
+// ARTICLES DATABASE — full content for every article
+// ============================================================
+const ARTICLES = {
+  gpt5: {
+    tag:'🔬 بحث وتطوير', tagClass:'tag-blue',
+    title:'GPT-5 يتجاوز حاجز الاستدلال ويحقق 92% في اختبار Bar للمحامين',
+    source:'MIT Technology Review', date:'3 مايو 2025', readTime:'8 دقائق',
+    body:`
+      <p>أعلنت شركة OpenAI رسمياً عن إطلاق نموذجها الجديد GPT-5، في خطوة وصفها المحللون بأنها نقطة تحوّل حقيقية في تاريخ الذكاء الاصطناعي. النموذج يُحقق أداءً يتجاوز 90% من المحامين البشريين في اختبار شريط المحامين الأمريكي (Bar Exam)، مُسجّلاً نسبة نجاح بلغت 92%.</p>
+      <div class="article-box">
+        <div class="article-box-label">الأرقام الرئيسية</div>
+        <ul>
+          <li>92% في اختبار Bar مقارنة بـ 50% لـ GPT-4</li>
+          <li>سياق يصل إلى 2 مليون رمز (token)</li>
+          <li>يدعم الصوت والصورة والفيديو في سياق واحد</li>
+          <li>متاح لمشتركي ChatGPT Plus بدءاً من يونيو 2025</li>
+          <li>تدريب على بيانات تصل إلى مارس 2025</li>
+        </ul>
+      </div>
+      <p>يعتمد GPT-5 على تقنية "سلسلة التفكير الموسّعة" (Extended Chain-of-Thought) التي تُتيح للنموذج التحقق من منطقه الداخلي قبل إصدار الإجابة. هذا يُقلل بشكل كبير من ظاهرة "الهلوسة" التي كانت تُؤرق النماذج السابقة.</p>
+      <div class="article-quote">
+        <p>هذا النموذج يُمثّل قفزة نوعية حقيقية، ليس فقط في القدرات التقنية، بل في القدرة على الاستدلال المنطقي والتفكير متعدد الخطوات.</p>
+        <cite>— سام ألتمان، الرئيس التنفيذي لـ OpenAI</cite>
+      </div>
+      <p>يرى المحللون أن هذا الإصدار يُثير تساؤلات جدية حول مستقبل المهن المعرفية المتخصصة. فإذا كان النموذج يتفوق على 90% من المحامين، فأين يقف المحامي البشري في عالم المستقبل؟</p>
+      <p>في المقابل، يُشدد خبراء السوق على أن الذكاء الاصطناعي لا يزال قاصراً عن استيعاب الجانب الإنساني في التعامل مع العملاء، والحكم في الحالات الاستثنائية التي تتطلب تجربة حياتية وفهماً اجتماعياً عميقاً.</p>
+      <div class="article-box">
+        <div class="article-box-label">تحديات لا تزال قائمة</div>
+        <ul>
+          <li>الهلوسة لا تزال موجودة في الحالات الحدّية النادرة</li>
+          <li>التكلفة التشغيلية مرتفعة مقارنة بالنماذج الأخرى</li>
+          <li>لا يفهم السياق الثقافي المحلي بالكفاءة ذاتها</li>
+          <li>يحتاج إلى مراجعة بشرية في القرارات ذات المخاطر العالية</li>
+        </ul>
+      </div>
+    `,
+    related:['alphafold3','mistral','analysis_race']
+  },
+
+  alphafold3: {
+    tag:'🧬 أبحاث', tagClass:'tag-purple',
+    title:'DeepMind يكشف AlphaFold 3: تنبؤ بنية جميع جزيئات الحياة',
+    source:'Nature', date:'2 مايو 2025', readTime:'10 دقائق',
+    body:`
+      <p>في خطوة تُعدّ ثورة حقيقية في علم الأحياء الجزيئي، كشف Google DeepMind عن الجيل الثالث من نموذجه الأسطوري AlphaFold. هذا الجيل لا يقتصر على التنبؤ ببنية البروتينات، بل يمتد ليشمل جميع الجزيئات الحيوية المعروفة.</p>
+      <div class="article-box">
+        <div class="article-box-label">ما الجديد في AlphaFold 3؟</div>
+        <ul>
+          <li>يشمل الحمض النووي DNA وRNA والجزيئات الصغيرة</li>
+          <li>دقة تنبؤ أعلى بـ 40% من الجيل السابق</li>
+          <li>قاعدة بيانات مفتوحة تضم 214 مليون بنية جزيئية</li>
+          <li>تطبيقات فورية في تصميم الأدوية والعلاجات الجينية</li>
+          <li>يعمل في ثوانٍ مقارنة بشهور للطرق التجريبية</li>
+        </ul>
+      </div>
+      <p>ما يُميز هذا الإصدار هو قدرته على فهم كيفية تفاعل جزيئات مختلفة الأنواع مع بعضها — وهو ما كان مستحيلاً في السابق لأن كل نموذج كان متخصصاً في نوع جزيئي واحد.</p>
+      <div class="article-quote">
+        <p>AlphaFold 3 يُعجّل من عملية اكتشاف الأدوية بشكل لم نكن نتخيله قبل خمس سنوات. الجزيئة التي كانت تستغرق عشر سنوات للدراسة، باتت تُفهم في أسابيع.</p>
+        <cite>— د. جون جامبر، باحث رئيسي في DeepMind</cite>
+      </div>
+      <p>شركات الأدوية الكبرى كـ Pfizer وNovartis أعلنت فوراً عن شراكات لاستخدام النموذج في بحوثها. التوقعات تُشير إلى أن AlphaFold 3 قد يُقصّر دورة تطوير الأدوية من عشر سنوات إلى ثلاث سنوات في بعض الحالات.</p>
+      <div class="article-box">
+        <div class="article-box-label">تطبيقات فورية متوقعة</div>
+        <ul>
+          <li>تصميم أدوية مستهدفة لسرطانات مقاومة للعلاج</li>
+          <li>تطوير مضادات حيوية جديدة لمكافحة المقاومة</li>
+          <li>فهم أعمق لآليات الأمراض الوراثية النادرة</li>
+          <li>تسريع تطوير اللقاحات في حالات الأوبئة</li>
+        </ul>
+      </div>
+    `,
+    related:['gpt5','analysis_race','jobs_report']
+  },
+
+  saudi40b: {
+    tag:'💰 استثمار', tagClass:'tag-orange',
+    title:'السعودية تضخ 40 مليار دولار في صندوق AI مع SoftBank',
+    source:'Financial Times', date:'2 مايو 2025', readTime:'6 دقائق',
+    body:`
+      <p>أعلنت المملكة العربية السعودية، ممثلةً بصندوق الاستثمارات العامة (PIF)، عن شراكة استراتيجية مع مجموعة SoftBank اليابانية لإطلاق صندوق استثماري ضخم بقيمة 40 مليار دولار يستهدف قطاع الذكاء الاصطناعي على المستوى العالمي.</p>
+      <div class="article-box">
+        <div class="article-box-label">تفاصيل الصندوق</div>
+        <ul>
+          <li>الحجم الإجمالي: 40 مليار دولار أمريكي</li>
+          <li>مقر رئيسي في الرياض مع مكاتب في طوكيو وسان فرانسيسكو</li>
+          <li>يستهدف الاستثمار في 25 دولة ناشئة</li>
+          <li>يشمل بنية تحتية وأبحاث ومنصات وشركات ناشئة</li>
+          <li>أفق الاستثمار: 10-15 سنة</li>
+        </ul>
+      </div>
+      <p>يُعدّ هذا الصندوق الأضخم من نوعه في تاريخ الاستثمار في الذكاء الاصطناعي، متجاوزاً صندوق Vision Fund الأول والثاني لـ SoftBank. الهدف المُعلن هو دعم ما لا يقل عن 1000 شركة ناشئة في مجال AI خلال السنوات الخمس المقبلة.</p>
+      <div class="article-quote">
+        <p>الاستثمار في الذكاء الاصطناعي ليس رفاهية، بل ضرورة استراتيجية. المملكة تُريد أن تكون في قلب هذه الثورة، لا على هامشها.</p>
+        <cite>— الأمير محمد بن سلمان، ولي العهد السعودي</cite>
+      </div>
+      <p>الإعلان جاء على هامش القمة العالمية للذكاء الاصطناعي في الرياض، حيث حضر أكثر من 200 مسؤول حكومي وتنفيذي من كبرى شركات التكنولوجيا العالمية. ومن المتوقع أن تُوجَّه حصة كبيرة من التمويل نحو مشاريع في منطقة الشرق الأوسط وأفريقيا وجنوب شرق آسيا.</p>
+      <div class="article-box">
+        <div class="article-box-label">تأثير على المنطقة العربية</div>
+        <ul>
+          <li>إنشاء مراكز بيانات ضخمة في السعودية والإمارات</li>
+          <li>برامج تدريب لـ 500,000 متخصص في AI بحلول 2030</li>
+          <li>دعم نماذج لغوية عربية متخصصة</li>
+          <li>تأسيس معاهد بحثية مشتركة مع جامعات عالمية</li>
+        </ul>
+      </div>
+    `,
+    related:['jobs_report','analysis_race','china_policy']
+  },
+
+  mistral: {
+    tag:'🌍 نماذج', tagClass:'tag-blue',
+    title:'Mistral تطلق Le Chat Pro: منافس أوروبي يدعم 32 لغة',
+    source:'The Verge', date:'3 مايو 2025', readTime:'5 دقائق',
+    body:`
+      <p>أطلقت شركة Mistral AI الفرنسية الناشئة مساعدها الذكي المتكامل "Le Chat Pro"، في خطوة تُرسّخ مكانة أوروبا كمنافس جدي في ساحة نماذج اللغة الكبيرة.</p>
+      <div class="article-box">
+        <div class="article-box-label">مميزات Le Chat Pro</div>
+        <ul>
+          <li>يدعم 32 لغة عالمية بما فيها العربية</li>
+          <li>معالجة ملفات PDF والصور بشكل متقدم</li>
+          <li>امتثال كامل للائحة GDPR الأوروبية</li>
+          <li>بيانات المستخدم لا تُستخدم في التدريب افتراضياً</li>
+          <li>واجهة برمجية (API) تنافسية الأسعار</li>
+        </ul>
+      </div>
+      <p>ما يُميّز Le Chat Pro عن منافسيه هو التركيز الصريح على الخصوصية كأولوية أولى لا كميزة إضافية. الشركة تُعلن أن بيانات المستخدمين لا تغادر الأراضي الأوروبية، مما يجعله الخيار المفضّل للمؤسسات الحكومية والمالية في أوروبا.</p>
+      <div class="article-quote">
+        <p>نحن لا نبيع بيانات مستخدمينا، ولن نفعل. الخصوصية ليست ميزة تسويقية، إنها مبدأ أساسي في تصميم منتجاتنا.</p>
+        <cite>— آرثر مينش، المؤسس المشارك لـ Mistral AI</cite>
+      </div>
+      <p>Le Chat Pro متاح الآن بنسختين: مجانية بحدود استخدام معقولة، وبنسخة مدفوعة بـ 14.99 يورو شهرياً تتضمن وصولاً غير محدود وأدوات عمل متقدمة.</p>
+    `,
+    related:['gpt5','china_policy','analysis_race']
+  },
+
+  china_policy: {
+    tag:'⚖️ سياسات', tagClass:'tag-green',
+    title:'الصين تُطلق معياراً وطنياً موحداً لأمان نماذج الذكاء الاصطناعي',
+    source:'Reuters', date:'3 مايو 2025', readTime:'7 دقائق',
+    body:`
+      <p>أعلنت الحكومة الصينية عن إطار تنظيمي شامل يُلزم جميع شركات التقنية العاملة في مجال الذكاء الاصطناعي بالامتثال لمعايير أمان موحّدة، في خطوة تُقرّب الصين من الاتحاد الأوروبي في مسار تنظيم AI.</p>
+      <div class="article-box">
+        <div class="article-box-label">أبرز متطلبات المعيار الجديد</div>
+        <ul>
+          <li>تدقيق أمني ثلاثي المراحل قبل طرح أي نموذج</li>
+          <li>شفافية إلزامية حول بيانات التدريب</li>
+          <li>حظر إنتاج محتوى مُضلّل أو مسيء للنظام السياسي</li>
+          <li>آليات تتبع وإيقاف فورية للنماذج المُخالفة</li>
+          <li>تقارير دورية إلى الجهات الرقابية كل ثلاثة أشهر</li>
+        </ul>
+      </div>
+      <p>يأتي هذا الإطار بعد سلسلة من الحوادث التي أثارت قلق الحكومة الصينية، أبرزها انتشار محتوى توليدي مُضلّل على منصات التواصل الاجتماعي خلال الانتخابات المحلية في عدة مقاطعات عام 2024.</p>
+      <div class="article-quote">
+        <p>الذكاء الاصطناعي سلاح ذو حدّين. يجب أن يخدم التنمية الاجتماعية دون أن يُهدد الاستقرار أو يُعرّض المواطنين للمخاطر.</p>
+        <cite>— وزارة الصناعة وتكنولوجيا المعلومات الصينية</cite>
+      </div>
+      <p>المثير للاهتمام أن المعيار الصيني الجديد يُعدّ في بعض جوانبه أكثر صرامة من EU AI Act الأوروبي، خاصةً في متطلبات الشفافية وآليات التدقيق المستمر. يُتيح هذا الأمر نقطة حوار جديدة بين بكين وبروكسل حول إمكانية التنسيق التنظيمي الدولي.</p>
+    `,
+    related:['analysis_safety','saudi40b','hollywood_ai']
+  },
+
+  hollywood_ai: {
+    tag:'🎬 إبداع', tagClass:'tag-purple',
+    title:'Sora وRunway يعيدان تشكيل السينما: 60% من المؤثرات توليدية',
+    source:'Wired', date:'3 مايو 2025', readTime:'9 دقائق',
+    body:`
+      <p>كشف استطلاع شامل أجرته مجلة Variety بالتعاون مع مؤسسة تحليلات الترفيه PwC أن 60% من المؤثرات البصرية في أفلام هوليوود الكبرى خلال الربع الأول من 2025 استُعيض عنها كلياً أو جزئياً بمحتوى توليدي بالذكاء الاصطناعي.</p>
+      <div class="article-box">
+        <div class="article-box-label">الأدوات الرائدة في هوليوود 2025</div>
+        <ul>
+          <li>Sora (OpenAI): توليد مقاطع فيديو سينمائية الجودة</li>
+          <li>Runway Gen-3: تحرير وتعديل المشاهد بدقة عالية</li>
+          <li>Adobe Firefly: دمج العناصر التوليدية مع اللقطات الحية</li>
+          <li>Stability AI: توليد خلفيات وبيئات افتراضية</li>
+          <li>ElevenLabs: تكييف الأصوات وتوليد حوارات احتياطية</li>
+        </ul>
+      </div>
+      <p>الأرقام مذهلة من الناحية الاقتصادية: ميزانية المؤثرات البصرية لفيلم بلوك باستر متوسط انخفضت بنسبة 35-40% مقارنة بعام 2022. في المقابل، ارتفع عدد الأفلام المُنتجة بنفس الميزانية الإجمالية بنسبة 28%.</p>
+      <div class="article-quote">
+        <p>لم يعد السؤال هو "هل نستخدم AI؟" بل "كيف ندمجه بطريقة تحافظ على الروح الإبداعية وتُحسّن الجودة؟"</p>
+        <cite>— جيمس كاميرون، مخرج Terminator وAvatar</cite>
+      </div>
+      <p>لكن الصورة ليست وردية تماماً. نقابات الفنانين التقنيين (VES) وكتّاب السيناريو تُصعّد ضغطها على استوديوهات الإنتاج للتفاوض على حقوق عادلة في ظل هذا التحول. مفاوضات جديدة مُتوقعة في الخريف القادم قد تُعيد تشكيل بنية العقود في الصناعة.</p>
+      <div class="article-box">
+        <div class="article-box-label">أفلام استخدمت AI بشكل واسع (2024-2025)</div>
+        <ul>
+          <li>Horizon 3 — 70% من المشاهد الخارجية توليدية</li>
+          <li>Galaxy's Edge — خلفيات الفضاء كاملة بـ Sora</li>
+          <li>The Lost City 2 — توسيع المشاهد الطبيعية بالكامل</li>
+        </ul>
+      </div>
+    `,
+    related:['analysis_race','mistral','copilot_enterprise']
+  },
+
+  fda_ai: {
+    tag:'🏥 تطبيقات', tagClass:'tag-orange',
+    title:'FDA يوافق على أول نظام تشخيصي AI بدون مراجعة بشرية',
+    source:'STAT News', date:'3 مايو 2025', readTime:'7 دقائق',
+    body:`
+      <p>في سابقة تاريخية قد تُعيد تشكيل مستقبل الرعاية الصحية، أعلنت إدارة الغذاء والدواء الأمريكية (FDA) عن منحها الموافقة الكاملة لنظام تشخيص سرطان الثدي المُطوَّر من شركة Lumos AI، وهو أول نظام يُسمح له بالعمل الكلي دون مراجعة طبيب بشري في فئة محددة من الفحوصات.</p>
+      <div class="article-box">
+        <div class="article-box-label">أداء النظام في التجارب السريرية</div>
+        <ul>
+          <li>دقة تشخيص السرطان المبكر: 98.2%</li>
+          <li>معدل الإيجابي الكاذب: 0.7% (أفضل من المتوسط البشري 5%)</li>
+          <li>وقت التشخيص: 8 ثوانٍ مقارنة بـ 48 ساعة سابقاً</li>
+          <li>تجارب على 2.3 مليون صورة من 47 دولة</li>
+          <li>5 سنوات من التطوير والتدقيق السريري</li>
+        </ul>
+      </div>
+      <p>الموافقة ليست مطلقة — النظام مُرخَّص للعمل باستقلالية في فحوصات التصوير الإشعاعي الروتينية (Screening Mammography) فقط، ولا يزال يتطلب مراجعة طبيب في الحالات غير الاعتيادية أو عند طلب المريض.</p>
+      <div class="article-quote">
+        <p>هذا يعني أن ملايين النساء في المناطق النائية التي تفتقر إلى أطباء أشعة يمكنهن الآن الحصول على تشخيص دقيق فوري. هذا هو الذكاء الاصطناعي في خدمة الإنسانية.</p>
+        <cite>— د. سارة ميلر، مديرة مركز أجهزة FDA</cite>
+      </div>
+      <p>المنافسون كـ Google Health وMicrosoft Azure Health يُراقبون القرار عن كثب، وتوقعات بتقديم طلبات مماثلة خلال الأشهر الستة المقبلة لنماذج التشخيص الخاصة بهم في تخصصات أخرى كالتشخيص بالأشعة السينية وتحليل صور الشبكية.</p>
+      <div class="article-box">
+        <div class="article-box-label">مخاوف معلّقة</div>
+        <ul>
+          <li>كيف يتعامل النظام مع الحالات الغامضة؟</li>
+          <li>المسؤولية القانونية عند الخطأ: من يتحمّلها؟</li>
+          <li>تأثير تنوع السكان على دقة التشخيص</li>
+          <li>آليات التحديث والمراجعة المستمرة للنموذج</li>
+        </ul>
+      </div>
+    `,
+    related:['alphafold3','jobs_report','analysis_safety']
+  },
+
+  copilot_enterprise: {
+    tag:'💻 أدوات', tagClass:'tag-blue',
+    title:'GitHub Copilot Enterprise يفهم قاعدة الكود الكاملة في سياق واحد',
+    source:'GitHub Blog', date:'3 مايو 2025', readTime:'6 دقائق',
+    body:`
+      <p>أعلنت Microsoft عن تحديث جذري لـ GitHub Copilot Enterprise يُغيّر طريقة تعامل النموذج مع قواعد الكود البرمجي. بدلاً من تحليل الملفات بشكل منفصل، يستطيع الإصدار الجديد استيعاب قاعدة الكود الكاملة — حتى الضخمة منها — في سياق موحّد.</p>
+      <div class="article-box">
+        <div class="article-box-label">الإمكانيات الجديدة</div>
+        <ul>
+          <li>سياق يصل إلى 10 ملايين رمز (فهم المشروع كاملاً)</li>
+          <li>اقتراح تغييرات عبر ملفات متعددة في آنٍ واحد</li>
+          <li>كشف الثغرات الأمنية بالتحليل الشامل للكود</li>
+          <li>توثيق تلقائي يفهم الهدف الكلي للمشروع</li>
+          <li>اقتراح اختبارات (tests) بناءً على السلوك الفعلي</li>
+        </ul>
+      </div>
+      <p>ما يُميز هذا التحديث عن السابق هو القفزة من "مساعد ملف" إلى "شريك مشروع". المطوّرون الذين جرّبوا النسخة البيتا يصفون التجربة بأنها تُشبه العمل مع مطوّر آخر يفهم كل جانب من جوانب قاعدة الكود.</p>
+      <div class="article-quote">
+        <p>للمرة الأولى، أشعر أن Copilot يفهم ما أحاول بناءه، لا مجرد الكود الذي أكتبه أمامه في هذه اللحظة.</p>
+        <cite>— مطوّر مشارك في برنامج البيتا</cite>
+      </div>
+      <p>Copilot Enterprise المُحدَّث متاح للمشتركين في خطة Enterprise بتسعير مُراجع يبدأ من 39 دولاراً شهرياً للمستخدم. Microsoft تُشير إلى دراسات داخلية تُظهر زيادة إنتاجية بنسبة 55% مقارنة بـ 26% للإصدارات السابقة.</p>
+    `,
+    related:['gpt5','analysis_race','mistral']
+  },
+
+  jobs_report: {
+    tag:'📊 مجتمع', tagClass:'tag-green',
+    title:'تقرير McKinsey: AI يُنشئ وظائف أكثر مما يُلغيه في 2025',
+    source:'McKinsey Global Institute', date:'3 مايو 2025', readTime:'8 دقائق',
+    body:`
+      <p>نشر معهد McKinsey العالمي تقريره السنوي الأشمل حول تأثير الذكاء الاصطناعي على سوق العمل، وجاءت النتائج مُفاجِئة لكثيرين: الذكاء الاصطناعي يُنشئ وظائف جديدة بوتيرة أسرع من إلغائه للوظائف القائمة في العام الحالي.</p>
+      <div class="article-box">
+        <div class="article-box-label">أرقام التقرير الرئيسية</div>
+        <ul>
+          <li>78 مليون وظيفة جديدة مرتبطة بـ AI في 2025</li>
+          <li>45 مليون وظيفة تأثرت أو تحوّلت بشكل كبير</li>
+          <li>متوسط الأجر للوظائف الجديدة أعلى بـ 23% من الوظائف المُلغاة</li>
+          <li>القطاع الصحي والتعليمي الأعلى نمواً في الوظائف الجديدة</li>
+          <li>مهارات البرمجة التوليدية وإدارة نماذج AI الأكثر طلباً</li>
+        </ul>
+      </div>
+      <p>لكن التقرير يُحذّر من قراءة هذه الأرقام بتفاؤل مبسّط: التحوّل ليس سلساً، والمهارات المطلوبة في الوظائف الجديدة تختلف جذرياً عن تلك التي تُلغى. هناك "فجوة مهارية" حقيقية يُواجهها العمال في منتصف مساراتهم المهنية.</p>
+      <div class="article-quote">
+        <p>الخبر الجيد أن الذكاء الاصطناعي يخلق ثروة. الخبر الصعب أن هذه الثروة لا تتوزع تلقائياً على من يخسرون وظائفهم. إعادة التأهيل المهني هي تحدي جيلنا.
+        </p>
+        <cite>— د. جاكيس بوجيان، رئيس McKinsey Global Institute</cite>
+      </div>
+      <p>التقرير يوصي الحكومات بضخ استثمارات عاجلة في برامج إعادة التدريب، مُقترحاً نموذج "الضمان الوظيفي" الذي يتيح للعمال المُتضرّرين إعادة التأهل مدفوعة الأجر. دول الشمال الأوروبي كالدنمارك والسويد تُقدَّم كنماذج يُحتذى بها في هذا السياق.</p>
+      <div class="article-box">
+        <div class="article-box-label">القطاعات الأعلى نمواً في وظائف AI</div>
+        <ul>
+          <li>🏥 الرعاية الصحية: +4.2 مليون وظيفة</li>
+          <li>🎓 التعليم والتدريب: +3.8 مليون وظيفة</li>
+          <li>💻 تطوير البرمجيات: +3.1 مليون وظيفة</li>
+          <li>🔒 الأمن السيبراني: +2.9 مليون وظيفة</li>
+          <li>📊 تحليل البيانات: +2.6 مليون وظيفة</li>
+        </ul>
+      </div>
+    `,
+    related:['saudi40b','fda_ai','analysis_race']
+  },
+
+  analysis_race: {
+    tag:'📊 تحليل', tagClass:'tag-purple',
+    title:'سباق النماذج الكبيرة: كيف تُعيد العمالقة رسم حدود الذكاء الاصطناعي؟',
+    source:'نيورون — تحليل خاص', date:'28 أبريل 2025', readTime:'12 دقيقة',
+    body:`
+      <p>بعد أربع سنوات من إطلاق ChatGPT وإشعاله ثورة الذكاء الاصطناعي التوليدي، أصبح المشهد أكثر تعقيداً وثراءً. لم يعد السباق بين OpenAI وGoogle فحسب، بل امتد ليشمل عشرات الشركات على مستويات ومحاور متعددة.</p>
+      <div class="article-box">
+        <div class="article-box-label">خارطة اللاعبين الرئيسيين 2025</div>
+        <ul>
+          <li>OpenAI: GPT-5 يُعيد تعريف القدرات الاستدلالية</li>
+          <li>Google DeepMind: Gemini Ultra + AlphaFold 3 + Veo</li>
+          <li>Anthropic: Claude 4 مع التركيز الأمثل على السلامة</li>
+          <li>Meta AI: Llama 4 مفتوح المصدر يُقلص الفجوة</li>
+          <li>Mistral: قطب أوروبي يُرسّخ التميّز في الخصوصية</li>
+          <li>xAI: Grok 3 يستفيد من بيانات X الحصرية</li>
+        </ul>
+      </div>
+      <p>يُشير المحللون إلى ظاهرة جديدة: "تشبع نقاط المعيار التقليدية". تفوّق نموذج على آخر في اختبار MMLU أو HumanEval لم يعد يُترجَم بالضرورة إلى أداء أفضل في التطبيقات الواقعية، مما يدفع الشركات إلى الابتكار في كيفية القياس والمقارنة.</p>
+      <div class="article-quote">
+        <p>المعركة الحقيقية لم تعد في الاختبارات، بل في من يحل مشاكل حقيقية لمستخدمين حقيقيين. الأرقام تبهر الباحثين، لكن التبنّي يُقرّره المستخدم العادي.</p>
+        <cite>— بيندكت إيفانز، محلل تكنولوجيا في a16z</cite>
+      </div>
+      <p>الاتجاه الأبرز في 2025 هو "التخصص العمودي": بدلاً من بناء نموذج شامل يُحاول الإجابة على كل شيء، تتجه الشركات نحو نماذج متخصصة في مجالات كالطب والقانون والبرمجة والتصميم. هذا يُقلل التكلفة ويرفع الجودة في نطاق محدد.</p>
+      <div class="article-box">
+        <div class="article-box-label">اتجاهات 2025-2026</div>
+        <ul>
+          <li>نماذج أصغر بأداء مُعادل للنماذج الكبيرة (Edge AI)</li>
+          <li>التحول من النص إلى multimodal نحو الأحداث الزمنية</li>
+          <li>الوكلاء المستقلون (AI Agents) يُنجزون مهام كاملة</li>
+          <li>التفكير الطويل (Long-horizon reasoning) كميزة تمييزية</li>
+          <li>نماذج شخصية تتعلم من سلوك المستخدم الفردي</li>
+        </ul>
+      </div>
+      <p>المحصّلة: السباق لن يُنتج فائزاً واحداً. المستقبل القريب سيكون حقبة نماذج متعددة، كل منها يتفوق في سياق معين، وستكون الميزة الحقيقية في القدرة على توجيه المستخدم نحو النموذج الأنسب لمهمته الخاصة.</p>
+    `,
+    related:['gpt5','mistral','analysis_safety']
+  },
+
+  analysis_safety: {
+    tag:'🛡️ تحليل', tagClass:'tag-green',
+    title:'أمان الذكاء الاصطناعي: من الأبحاث الأكاديمية إلى التنظيم الإلزامي',
+    source:'نيورون — تحليل خاص', date:'25 أبريل 2025', readTime:'11 دقيقة',
+    body:`
+      <p>في زمن قياسي، انتقلت قضية سلامة الذكاء الاصطناعي من النقاشات الفلسفية في أروقة جامعة كامبريدج إلى المجالس التشريعية في بروكسل وواشنطن وبكين. هذا التسارع ليس محض صدفة — بل نتاج سلسلة من الأحداث التي غيّرت تصورات صانعي القرار.</p>
+      <div class="article-box">
+        <div class="article-box-label">المحطات الفارقة في رحلة تنظيم AI</div>
+        <ul>
+          <li>2022: إطلاق ChatGPT يُعرّف الرأي العام بمخاطر النماذج الكبيرة</li>
+          <li>2023: خطاب Pause AI Letter يوقّعه 1000 عالم بارز</li>
+          <li>2024: حوادث موثّقة لتحيّز النماذج في قرارات قانونية</li>
+          <li>2025: EU AI Act يدخل حيز التطبيق الكامل</li>
+          <li>2025: أول صدام قانوني بين مستخدم وشركة AI بسبب ضرر موثّق</li>
+        </ul>
+      </div>
+      <p>يُقسّم الباحثون مخاطر الذكاء الاصطناعي إلى فئتين: مخاطر قريبة المدى (التحيّز، الهلوسة، الاستخدام المسيء) ومخاطر بعيدة المدى (فقدان السيطرة، المواءمة، الاستقلالية الزائدة). التنظيمات الحالية تتعامل مع الأولى، بينما الثانية لا تزال في مرحلة البحث.</p>
+      <div class="article-quote">
+        <p>أكبر خطأ يمكن أن نرتكبه هو الاعتقاد أن تنظيم AI بسيط أو أنه مجرد مسألة تقنية. إنه أعمق من ذلك — إنه سؤال عن القيم التي نريد أن تُجسّدها أنظمة ستتخذ قرارات تمس حياتنا.
+        </p>
+        <cite>— يوشوا بنجيو، رائد التعلم العميق وعضو قسم السلامة في AI</cite>
+      </div>
+      <p>الأطر التنظيمية الحالية — EU AI Act، وقرارات البيت الأبيض التنفيذية، والمعيار الصيني الجديد — تتشارك في نقطة واحدة: تصنيف النماذج حسب مستوى خطورتها وفرض متطلبات شفافية إلزامية. لكنها تختلف في كيفية التطبيق ومن يتحمل مسؤولية التدقيق.</p>
+    `,
+    related:['china_policy','analysis_race','alphafold3']
+  },
+
+  analysis_hardware: {
+    tag:'🖥️ تحليل', tagClass:'tag-orange',
+    title:'حرب الرقائق: Nvidia وتحديات المنافسة في عصر AI',
+    source:'نيورون — تحليل خاص', date:'20 أبريل 2025', readTime:'10 دقائق',
+    body:`
+      <p>تهيمن Nvidia على 88% من سوق معالجات الذكاء الاصطناعي — رقم يُبدو أشبه باحتكار في قطاع دقيق. لكن خلف هذا الرقم تكمن قصة أكثر تعقيداً: مزيج من التفوق التقني والنظام البيئي والتوقيت المثالي.</p>
+      <div class="article-box">
+        <div class="article-box-label">لماذا تتصدّر Nvidia؟</div>
+        <ul>
+          <li>CUDA: نظام برمجي راسخ منذ 2006 يصعب تجاوزه</li>
+          <li>معالجات H100 وH200 وBlackwell: قفزات أداء متتالية</li>
+          <li>شراكات مع كبرى شركات السحابة (AWS, Azure, GCP)</li>
+          <li>دعم مجتمعي ضخم من مكتبات ونماذج مُحسَّنة</li>
+          <li>تسليم موثوق وسلاسل توريد راسخة</li>
+        </ul>
+      </div>
+      <p>لكن المنافسين لا يستسلمون. AMD تقدّم ROCm كبديل مفتوح لـ CUDA، وهو يتحسّن بشكل ملحوظ. Intel تُعيد هيكلة استراتيجيتها بعد التراجع الذي عانته Habana Labs. Google وMicrosoft وAmazon تُطوّر رقائقها الخاصة (TPU, Trainium, Inferentia) لتقليل الاعتماد على Nvidia.</p>
+      <div class="article-quote">
+        <p>العالم يحتاج إلى أكثر من مورّد واحد للبنية التحتية التي ستدعم الذكاء الاصطناعي للعقود القادمة. التنويع ليس رفاهية، إنه ضرورة أمنية.
+        </p>
+        <cite>— ساتيا ناديلا، الرئيس التنفيذي لـ Microsoft</cite>
+      </div>
+      <p>المتغير الأكبر هو الصين. قيود التصدير الأمريكية المفروضة على رقائق Nvidia المتقدمة دفعت الصين نحو تسريع تطوير بدائل محلية. Huawei Ascend 910C يُقدَّم كمنافس جدّي، لكن فجوة الأداء مع Blackwell لا تزال كبيرة بتقدير المحللين المستقلين.</p>
+    `,
+    related:['saudi40b','analysis_race','jobs_report']
+  }
+};
+
+// ============================================================
+// ARCHIVE DATA
+// ============================================================
+const ARCHIVE = [
+  {date:'2025-05-02', title:'GPT-5 يُسجّل أداءً فوق البشري في الاستدلال المنطقي', source:'MIT Technology Review', cat:'نماذج', key:'gpt5'},
+  {date:'2025-05-01', title:'DeepMind يكشف AlphaFold 3 مع قدرات تنبؤ جزيئية شاملة', source:'Nature', cat:'أبحاث', key:'alphafold3'},
+  {date:'2025-04-30', title:'السعودية وSoftBank: صندوق 40 مليار دولار للذكاء الاصطناعي', source:'Financial Times', cat:'استثمار', key:'saudi40b'},
+  {date:'2025-04-29', title:'الاتحاد الأوروبي يطلق أول منصة تقييم مشترك لنماذج AI', source:'Reuters', cat:'سياسات', key:'china_policy'},
+  {date:'2025-04-28', title:'Nvidia Blackwell Ultra يُحطم أرقاماً قياسية في الأداء', source:'Wired', cat:'أدوات', key:'analysis_hardware'},
+  {date:'2025-04-27', title:'FDA يوافق على نظام تشخيص سرطاني يعمل باستقلالية كاملة', source:'STAT News', cat:'تطبيقات', key:'fda_ai'},
+  {date:'2025-04-26', title:'Anthropic تنشر تقريراً شاملاً عن سلامة النماذج الكبيرة', source:'Anthropic Blog', cat:'أبحاث', key:'analysis_safety'},
+  {date:'2025-04-25', title:'Mistral تطلق Le Chat Pro: مساعد أوروبي يدعم 32 لغة', source:'The Verge', cat:'نماذج', key:'mistral'},
+  {date:'2025-04-24', title:'Apple Intelligence يصل إلى 160 دولة مع دعم العربية', source:'Bloomberg', cat:'أدوات', key:'copilot_enterprise'},
+  {date:'2025-04-23', title:'دراسة: AI يُقلص وقت اكتشاف الأدوية من 12 سنة إلى 18 شهراً', source:'Science', cat:'تطبيقات', key:'alphafold3'},
+  {date:'2025-04-22', title:'Meta تطلق Llama 4 مع قدرات multimodal متقدمة', source:'VentureBeat', cat:'نماذج', key:'analysis_race'},
+  {date:'2025-04-21', title:'الصين تُحدّث قوانين تنظيم AI لتشمل الإنتاج الترفيهي', source:'Reuters', cat:'سياسات', key:'china_policy'},
+  {date:'2025-04-20', title:'GitHub Copilot Workspace يفهم قاعدة الكود كاملة في سياق واحد', source:'GitHub Blog', cat:'أدوات', key:'copilot_enterprise'},
+  {date:'2025-04-19', title:'تقرير McKinsey: AI يُنشئ 78M وظيفة جديدة في 2025', source:'McKinsey', cat:'استثمار', key:'jobs_report'},
+  {date:'2025-04-18', title:'Google Gemini Ultra يتفوق على GPT-4 في 15 معياراً', source:'Google AI Blog', cat:'نماذج', key:'analysis_race'},
+  {date:'2025-04-17', title:'OpenAI تطلق GPT-4o مع دعم صوتي في الوقت الفعلي', source:'OpenAI Blog', cat:'نماذج', key:'gpt5'},
+  {date:'2025-04-16', title:'IBM watsonx يُساعد 50 مصرفاً في أتمتة العمليات', source:'IBM Newsroom', cat:'تطبيقات', key:'fda_ai'},
+  {date:'2025-04-15', title:'ورقة: نماذج اللغة الصغيرة تحقق 95% من أداء GPT-4', source:'arXiv', cat:'أبحاث', key:'analysis_race'},
+  {date:'2025-04-14', title:'Runway Gen-3 يُثير جدلاً حول حقوق الإبداع الرقمي', source:'Wired', cat:'سياسات', key:'hollywood_ai'},
+  {date:'2025-04-13', title:'Intel Gaudi 3 يُعلن منافسة مباشرة لـ Nvidia في التدريب', source:'AnandTech', cat:'أدوات', key:'analysis_hardware'},
+  {date:'2025-04-12', title:'دراسة: 73% من الشركات الكبرى تعتمد AI في عمليات جوهرية', source:'Gartner', cat:'استثمار', key:'jobs_report'},
+  {date:'2025-04-11', title:'xAI تطلق Grok 3 مع وصول مباشر للإنترنت', source:'TechCrunch', cat:'نماذج', key:'mistral'},
+  {date:'2025-04-10', title:'البنك الدولي يُموّل مشاريع AI للتنمية في 40 دولة نامية', source:'World Bank', cat:'استثمار', key:'saudi40b'},
+  {date:'2025-04-09', title:'ورقة: RLHF يُحسّن الأمان لكن يُقلل الإبداع وفق الأبحاث الجديدة', source:'Anthropic', cat:'أبحاث', key:'analysis_safety'},
+];
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sec-'+name).classList.add('active');
+  document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('active'));
+  const bn = document.getElementById('bn-'+name);
+  if(bn) bn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(name==='archive') renderArchive();
+}
+
+// ============================================================
+// ARTICLE VIEWER
+// ============================================================
+let currentArticleKey = null;
+
+function openArticle(key) {
+  const a = ARTICLES[key];
+  if(!a) { showToast('⚠️','محتوى هذا الخبر قيد الإضافة'); return; }
+  currentArticleKey = key;
+  document.getElementById('articleHeaderTitle').textContent = a.title;
+  document.getElementById('articleBody').innerHTML = `
+    <div class="article-tag"><span class="tag ${a.tagClass}">${a.tag}</span></div>
+    <h1 class="article-title">${a.title}</h1>
+    <div class="article-meta">
+      <span>📰 ${a.source}</span>
+      <span>📅 ${a.date}</span>
+      <span>⏱ ${a.readTime}</span>
+    </div>
+    <div class="article-text">${a.body}</div>
+    ${a.related && a.related.length ? `
+    <div class="related-title"><div class="section-line"></div>أخبار ذات صلة</div>
+    ${a.related.map(rk=>{
+      const r = ARTICLES[rk];
+      if(!r) return '';
+      return `<div class="related-card" onclick="openArticle('${rk}')">
+        <div class="tag ${r.tagClass}" style="font-size:9px;padding:2px 7px;margin-bottom:6px">${r.tag}</div>
+        <h4>${r.title}</h4>
+        <p>${r.source} · ${r.date}</p>
+      </div>`;
+    }).join('')}` : ''}
+  `;
+  document.getElementById('articleOverlay').classList.add('open');
+  document.getElementById('articleOverlay').scrollTop = 0;
+}
+
+function openArticleFromNotif(key) { openArticle(key); }
+
+function closeArticle() {
+  document.getElementById('articleOverlay').classList.remove('open');
+}
+
+async function shareArticle() {
+  const a = ARTICLES[currentArticleKey];
+  if(!a) return;
+  if(navigator.share) {
+    try {
+      await navigator.share({ title: a.title, text: `${a.title} — نيورون AI`, url: window.location.href });
+    } catch(e) {}
+  } else {
+    navigator.clipboard.writeText(`${a.title} — ${window.location.href}`);
+    showToast('📋 تم النسخ','تم نسخ رابط الخبر');
+  }
+}
+
+// Handle back gesture
+document.getElementById('articleOverlay').addEventListener('click', e => {
+  if(e.target === document.getElementById('articleOverlay')) closeArticle();
+});
+
+// ============================================================
+// NOTIFICATIONS PANEL
+// ============================================================
+function openNotifPanel() {
+  document.getElementById('notifPanel').classList.add('open');
+  document.getElementById('notifOverlay').classList.add('open');
+  document.getElementById('notifBadge').style.display = 'none';
+  checkNotifPermission();
+}
+function closeNotifPanel() {
+  document.getElementById('notifPanel').classList.remove('open');
+  document.getElementById('notifOverlay').classList.remove('open');
+}
+function checkNotifPermission() {
+  if(!('Notification' in window)) return;
+  const box = document.getElementById('enableNotifBox');
+  if(Notification.permission === 'default') box.style.display = 'block';
+  else box.style.display = 'none';
+}
+async function requestNotifPermission() {
+  if(!('Notification' in window)) { showToast('⚠️','متصفحك لا يدعم الإشعارات'); return; }
+  const perm = await Notification.requestPermission();
+  if(perm === 'granted') {
+    document.getElementById('enableNotifBox').style.display = 'none';
+    showToast('🔔 تم التفعيل!','ستصلك إشعارات الأخبار على شاشتك مباشرة');
+    scheduleLocalNotifications();
+  } else {
+    showToast('⚠️','تعذّر تفعيل الإشعارات. تحقق من إعدادات المتصفح');
+  }
+}
+
+function scheduleLocalNotifications() {
+  // Demo: fire a notification after 30 seconds
+  setTimeout(() => {
+    if(Notification.permission === 'granted') {
+      new Notification('🧠 نيورون AI — خبر عاجل', {
+        body: 'OpenAI تُعلن عن شراكة مع محاكم فيدرالية أمريكية لاستخدام GPT-5',
+        icon: 'icons/icon-192.png',
+        badge: 'icons/icon-192.png',
+        tag: 'neuron-ai-news',
+        renotify: true,
+      });
+    }
+  }, 30000);
+}
+
+// ============================================================
+// ARCHIVE
+// ============================================================
+const PER_PAGE = 8;
+let archPage = 1, archFilter = 'all', archSearch = '';
+
+function getFiltered() {
+  return ARCHIVE.filter(i => {
+    const mc = archFilter==='all' || i.cat===archFilter;
+    const ms = !archSearch || i.title.includes(archSearch) || i.source.includes(archSearch);
+    return mc && ms;
+  });
+}
+
+function renderArchive() {
+  const data = getFiltered();
+  const pages = Math.max(1, Math.ceil(data.length/PER_PAGE));
+  archPage = Math.min(archPage, pages);
+  const items = data.slice((archPage-1)*PER_PAGE, archPage*PER_PAGE);
+  const catClasses = {نماذج:'tag-blue',أبحاث:'tag-purple',استثمار:'tag-orange',سياسات:'tag-green',تطبيقات:'tag-orange',أدوات:'tag-blue'};
+
+  document.getElementById('archiveList').innerHTML = items.length
+    ? items.map(i=>`
+      <div class="arch-item" onclick="openArticle('${i.key}')">
+        <div class="arch-date">${i.date}</div>
+        <div class="arch-body">
+          <div class="arch-title">${i.title}</div>
+          <div class="arch-source">
+            <span class="tag ${catClasses[i.cat]||'tag-blue'}" style="font-size:9px;padding:1px 6px;margin-left:6px">${i.cat}</span>
+            ${i.source}
+          </div>
+        </div>
+        <div class="arch-arrow">←</div>
+      </div>`).join('')
+    : '<div style="padding:40px;text-align:center;color:var(--text-muted)">لا توجد نتائج</div>';
+
+  const pag = document.getElementById('pagination');
+  if(pages<=1){pag.innerHTML='';return;}
+  let h='';
+  if(archPage>1) h+=`<button class="pg-btn" onclick="goArchPage(${archPage-1})">→</button>`;
+  for(let p=1;p<=pages;p++) h+=`<button class="pg-btn ${p===archPage?'active':''}" onclick="goArchPage(${p})">${p}</button>`;
+  if(archPage<pages) h+=`<button class="pg-btn" onclick="goArchPage(${archPage+1})">←</button>`;
+  pag.innerHTML=h;
+}
+
+function goArchPage(p){archPage=p;renderArchive();document.getElementById('sec-archive').scrollTo(0,0);}
+function filterArchive(v){archSearch=v;archPage=1;renderArchive();}
+function setChip(el,cat){
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  archFilter=cat;archPage=1;renderArchive();
+}
+function doSearch(){
+  const v=document.getElementById('archSearch').value;
+  filterArchive(v);
+  showToast('🔍 نتائج البحث',`وُجد ${getFiltered().length} خبر`);
+}
+
+// ============================================================
+// PWA INSTALL
+// ============================================================
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBanner').style.display = 'flex';
+});
+async function installPWA() {
+  if(!deferredPrompt) {
+    showToast('📲 تثبيت يدوي','في Chrome: القائمة ← إضافة إلى الشاشة الرئيسية');
+    return;
+  }
+  deferredPrompt.prompt();
+  const {outcome} = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  document.getElementById('installBanner').style.display = 'none';
+  if(outcome==='accepted') showToast('✅ تم التثبيت!','يمكنك فتح نيورون من شاشتك الرئيسية');
+}
+window.addEventListener('appinstalled', () => {
+  showToast('✅ نيورون مُثبَّت','ابحث عن أيقونة نيورون AI على شاشتك الرئيسية');
+});
+
+// ============================================================
+// SERVICE WORKER
+// ============================================================
+if('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => {
+        console.log('[Neuron] SW registered:', reg.scope);
+        // Request periodic sync if supported
+        if('periodicSync' in reg) {
+          reg.periodicSync.register('news-update', { minInterval: 60*60*1000 }).catch(()=>{});
+        }
+      })
+      .catch(err => console.log('[Neuron] SW error:', err));
+  });
+}
+
+// ============================================================
+// OFFLINE DETECTION
+// ============================================================
+function updateOnlineStatus() {
+  const bar = document.getElementById('offlineBar');
+  bar.classList.toggle('show', !navigator.onLine);
+}
+window.addEventListener('online', updateOnlineStatus);
+window.addEventListener('offline', () => {
+  updateOnlineStatus();
+  showToast('📡 غير متصل','يعمل التطبيق في الوضع المحلي');
+});
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(title, msg, duration=3000) {
+  const wrap = document.getElementById('toastWrap');
+  const t = document.createElement('div');
+  t.className = 'toast';
+  const icon = title.split(' ')[0];
+  const text = title.includes(' ') ? title.slice(title.indexOf(' ')+1) : '';
+  t.innerHTML = `<div class="toast-icon">${icon}</div><div><div class="toast-title">${text||title}</div><div class="toast-msg">${msg}</div></div>`;
+  wrap.appendChild(t);
+  setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),300);}, duration);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+renderArchive();
+updateOnlineStatus();
+setTimeout(()=>showToast('🟢 متصل','تم الاتصال بـ 12 مصدراً إخبارياً عالمياً'), 800);
+setTimeout(()=>showToast('🔔 خبر عاجل','Anthropic تُطلق Claude 4 — اضغط للقراءة'), 5000);
+
+// Auto-refresh notification simulation
+setInterval(()=>{
+  const titles=['Google تُعلن عن Gemini 2 Ultra بقدرات استدلال جديدة','Meta تُطلق نموذج فيديو مفتوح المصدر','تسرب: OpenAI تستعد لإطلاق GPT-5 Mini'];
+  const t = titles[Math.floor(Math.random()*titles.length)];
+  showToast('📰 خبر جديد', t, 5000);
+  // Increment badge
+  const badge = document.getElementById('notifBadge');
+  badge.style.display='flex';
+  badge.textContent = Math.min(9, parseInt(badge.textContent||0)+1);
+}, 45000);
+</script>
+</body>
+</html>
